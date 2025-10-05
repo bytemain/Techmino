@@ -77,6 +77,7 @@ scene.widgetList={
     WIDGET.newSlider{name='atkFX',        x=330,y=820,lim=280,w=540,axis={0,5,1},disp=SETval('atkFX'),   code=SETsto('atkFX')},
 
     WIDGET.newSelector{name='frame',      x=400,y=890,lim=280,w=460,list={8,10,13,17,22,29,37,47,62,80,100},disp=SETval('frameMul'),code=function(v) SETTING.frameMul=v;Z.setFrameMul(SETTING.frameMul) end},
+    WIDGET.newSelector{name='maxFPS',     x=950,y=890,lim=280,w=300,list={60,90,120,144},color='S',disp=SETval('maxFPS'),code=function(v) SETTING.maxFPS=v; Z.setMaxFPS(v) end},
 
     WIDGET.newSwitch{name='text',         x=450,y=980,lim=360,disp=SETval('text'),          code=SETrev('text')},
     WIDGET.newSwitch{name='score',        x=450,y=1030,lim=360,disp=SETval('score'),        code=SETrev('score')},

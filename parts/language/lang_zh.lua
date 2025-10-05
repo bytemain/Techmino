@@ -561,6 +561,7 @@ return {
             atkFX="攻击特效:",
 
             frame="绘制帧率(%):",
+            maxFPS="最大帧率",
 
             text="消行文本",
             score="分数动画",

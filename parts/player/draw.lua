@@ -1005,7 +1005,7 @@ function draw.norm(P,repMode)
             GC.mStr("(+"..STRING.time_short(diff)..")",300,451)
         end
 
-        if P.frameRun<180 then
+    if P.frameRun<TIMING.secondsToFramesInt(3) then
             _drawStartCounter(P.frameRun)
         end
     gc_pop()

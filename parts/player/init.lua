@@ -437,7 +437,7 @@ function PLY.newDemoPlayer(id)
     P.sound=false
     P.demo=true
 
-    P.frameRun=180
+    P.frameRun=TIMING.secondsToFramesInt(3)
     P.draw=ply_draw.demo
     P.control=true
     GAME.modeEnv=DemoEnv

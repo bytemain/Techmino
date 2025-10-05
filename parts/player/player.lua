@@ -2434,7 +2434,7 @@ local function task_autoPause()
     while true do
         yield()
         time=time+1
-        if SCN.cur~='game' or PLAYERS[1].frameRun<180 then
+    if SCN.cur~='game' or PLAYERS[1].frameRun<TIMING.secondsToFramesInt(3) then
             return
         elseif time==120 then
             pauseGame()
@@ -2615,12 +2615,12 @@ local function update_alive(P,dt)
     local ENV=P.gameEnv
 
     P.frameRun=P.frameRun+1
-    if P.frameRun<=180 then
-        if P.frameRun==60 then
+    if P.frameRun<=TIMING.secondsToFramesInt(3) then
+        if P.frameRun==TIMING.secondsToFramesInt(1) then
             if P.id==1 then playReadySFX(2) end
-        elseif P.frameRun==120 then
+        elseif P.frameRun==TIMING.secondsToFramesInt(2) then
             if P.id==1 then playReadySFX(1) end
-        elseif P.frameRun==180 then
+        elseif P.frameRun==TIMING.secondsToFramesInt(3) then
             if P.id==1 then playReadySFX(0) end
             P.control=true
             P.timing=true
@@ -2964,15 +2964,16 @@ function Player:_die()
     end
 end
 function Player:update(dt)
-    self.trigFrame=self.trigFrame+dt*60
+    local hz=(TIMING and TIMING.LOGIC_HZ) or 60
+    self.trigFrame=self.trigFrame+dt*hz
     if self.alive then
         local S=self.stat
         if self.type=='bot' then self.bot:update(dt) end
+        -- Normalize time progression to be based on frame counter,
+        -- avoiding FPS-dependent drift when maxFPS changes.
         if self.trigFrame>=1 and self.alive then
-            if self.streamProgress then
-                S.time=self.stat.frame/60
-            elseif self.timing then
-                S.time=S.time+dt
+            if self.streamProgress or self.timing then
+                S.time=(TIMING and TIMING.framesToSeconds(self.stat.frame)) or (self.stat.frame/60)
             end
         end
         while self.trigFrame>=1 do
@@ -3016,6 +3017,12 @@ function Player:update(dt)
                 update_alive(self,dt)
             end
             self.trigFrame=self.trigFrame-1
+        end
+        -- After processing ticks, ensure time reflects latest frame count
+        if self.alive then
+            if self.streamProgress or self.timing then
+                S.time=(TIMING and TIMING.framesToSeconds(self.stat.frame)) or (self.stat.frame/60)
+            end
         end
     else
         while self.trigFrame>=1 do

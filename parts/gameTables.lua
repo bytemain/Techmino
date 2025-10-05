@@ -613,6 +613,8 @@ do-- Userdata tables
         RS='TRS',
 
         -- System
+        -- Logical tick rate for game logic (Hz)
+        logicHZ=60,
         reTime=2,
         allowTAS=false,
         autoPause=true,

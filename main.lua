@@ -42,6 +42,8 @@ FONT.load{
     norm='parts/fonts/proportional.otf',
     mono='parts/fonts/monospaced.otf',
 }
+-- Timing helper (defines LOGIC_HZ, frame/second conversion)
+TIMING=require'parts/timing'
 FONT.setDefault('norm')
 FONT.setFallback('norm')
 

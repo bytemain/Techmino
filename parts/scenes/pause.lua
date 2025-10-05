@@ -29,7 +29,8 @@ function scene.enter()
     timer1=(SCN.prev=='game' or SCN.prev=='depause') and 0 or 1
     timer2=timer1
 
-    local frameLostRate=(S.frame/S.time/60-1)*100
+    local hz=(TIMING and TIMING.LOGIC_HZ) or 60
+    local frameLostRate=(S.frame/S.time/hz-1)*100
     form={
         {COLOR.Z,STRING.time(S.time),frameLostRate>10 and COLOR.R or frameLostRate>3 and COLOR.Y or COLOR.H,(" (%.2f%%)"):format(frameLostRate)},
         ("%d/%d/%d"):format(S.key,S.rotate,S.hold),
@@ -250,7 +251,7 @@ function scene.draw()
     end
 
     -- Big info frame
-    if PLAYERS[1].frameRun>=180 then
+    if PLAYERS[1].frameRun>=TIMING.secondsToFramesInt(3) then
         GC.push('transform')
         GC.translate(560,205)
         GC.setLineWidth(2)
@@ -380,12 +381,12 @@ scene.widgetList={
     WIDGET.newKey{name='page_prev',x=500,y=390,w=70,code=pressKey'tab',
         fText=GC.DO{70,70,{'setLW',2},                                              {'dRRPol',33,35,32,3,6,3.142},{'dRRPol',45,35,32,3,6,3.142}},
         fShade=GC.DO{70,70,{'setCL',1,1,1,.4},{'draw',GC.DO{70,70,{'setCL',1,1,1,1},{'fRRPol',33,35,32,3,6,3.142},{'fRRPol',45,35,32,3,6,3.142}}}},
-        hideF=function() return PLAYERS[1].frameRun<=180 end,
+        hideF=function() return PLAYERS[1].frameRun<=TIMING.secondsToFramesInt(3) end,
         },
     WIDGET.newKey{name='page_next',x=1230,y=390,w=70,code=pressKey'Stab',
         fText=GC.DO{70,70,{'setLW',2},                                              {'dRRPol',37,35,32,3,6},{'dRRPol',25,35,32,3,6}},
         fShade=GC.DO{70,70,{'setCL',1,1,1,.4},{'draw',GC.DO{70,70,{'setCL',1,1,1,1},{'fRRPol',37,35,32,3,6},{'fRRPol',25,35,32,3,6}}}},
-        hideF=function() return PLAYERS[1].frameRun<=180 end,
+        hideF=function() return PLAYERS[1].frameRun<=TIMING.secondsToFramesInt(3) end,
         },
     WIDGET.newKey{name='replay',   x=865,y=165,w=200,h=40,font=25,code=pressKey'p',hideF=function() return not (GAME.result or GAME.replaying) or GAME.initPlayerCount>1 end},
     WIDGET.newKey{name='save',     x=1075,y=165,w=200,h=40,font=25,code=pressKey'o',hideF=function() return not (GAME.result or GAME.replaying) or GAME.initPlayerCount>1 or GAME.saved end},

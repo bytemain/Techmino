@@ -132,8 +132,9 @@ local function _rep5()
     _updateRepButtons()
 end
 local function _skip(P)
-    if P.frameRun<179 then
-        trigGameRate=trigGameRate+(179-P.frameRun)
+    local startGate = TIMING.secondsToFramesInt(3)-1
+    if P.frameRun<startGate then
+        trigGameRate=trigGameRate+(startGate-P.frameRun)
     else
         trigGameRate=trigGameRate+MATH.clamp(P.waiting+P.falling,1,300)
     end
@@ -369,8 +370,9 @@ local function _update_common(dt)
     -- Update players
     for p=1,#PLAYERS do PLAYERS[p]:update(dt) end
 
-    -- Fresh royale target
-    if PLAYERS[1].frameRun%120==0 and PLAYERS[1].gameEnv.layout=='royale' then
+    -- Fresh royale target every 2 seconds (logic time)
+    local every = TIMING.secondsToFramesInt(2)
+    if every>0 and PLAYERS[1].frameRun%every==0 and PLAYERS[1].gameEnv.layout=='royale' then
         freshMostDangerous()
     end
 

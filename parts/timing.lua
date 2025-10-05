@@ -15,4 +15,11 @@ function TIMING.secondsToFramesInt(seconds)
     return math.floor(seconds * TIMING.LOGIC_HZ + 0.5)
 end
 
+-- Apply logic tick rate from loaded settings
+function TIMING.applyFromSetting()
+    if SETTING and type(SETTING.logicHZ)=='number' then
+        TIMING.LOGIC_HZ = SETTING.logicHZ
+    end
+end
+
 return TIMING

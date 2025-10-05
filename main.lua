@@ -479,6 +479,7 @@ do
     saveStats()
     saveProgress()
     saveSettings()
+    if TIMING and TIMING.applyFromSetting then TIMING.applyFromSetting() end
 end
 
 -- Initialize language lib

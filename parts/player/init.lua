@@ -74,8 +74,8 @@ local function _newEmptyPlayer(id,mini)
     P.sound=false
     P.alive=true
     P.control=false
-    P.timing=false
-    P.trigFrame=0
+    P.timing=false-- Whether player is in active timing state (game started)
+    P.trigFrame=0-- Accumulated logical frame counter for triggering game updates
     P.result=false-- String: 'finish'|'win'|'lose'
     P.stat=_getNewStatTable()
     P.modeData=setmetatable({},modeDataMeta)-- Data use by mode

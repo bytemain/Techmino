@@ -711,32 +711,34 @@ local function _drawMission(curMission,L,missionkill)
     gc_pop()
 end
 local function _drawStartCounter(time)
-    time=179-time
+    -- Convert frame count to countdown seconds (3,2,1)
+    local totalFrames = TIMING.secondsToFramesInt(3)
+    time = totalFrames - time
     gc_push('transform')
         gc_translate(300,300)
         local r,g,b
-        local num=floor(time/60)+1
-        local d=time%60
+        local num = floor(time / TIMING.LOGIC_HZ) + 1
+        local d = time % TIMING.LOGIC_HZ
         if num==3 then
             r,g,b=.7,.8,.98
-            if d>45 then gc_rotate((d-45)^2*.00355) end
+            if d > TIMING.LOGIC_HZ * 0.75 then gc_rotate((d - TIMING.LOGIC_HZ * 0.75)^2 * 0.00355) end
         elseif num==2 then
             r,g,b=.98,.85,.75
-            if d>45 then gc_scale(1+(d/15-3)^2,1) end
+            if d > TIMING.LOGIC_HZ * 0.75 then gc_scale(1+(d/(TIMING.LOGIC_HZ/4)-3)^2,1) end
         elseif num==1 then
             r,g,b=1,.7,.7
-            if d>45 then gc_scale(1,1+(d/15-3)^2) end
+            if d > TIMING.LOGIC_HZ * 0.75 then gc_scale(1,1+(d/(TIMING.LOGIC_HZ/4)-3)^2) end
         end
         setFont(100)
 
-        gc_setColor(r,g,b,d/60)
+        gc_setColor(r,g,b,d/TIMING.LOGIC_HZ)
         gc_push('transform')
-            gc_scale((1.5-d/60*.6)^1.5)
+            gc_scale((1.5-d/TIMING.LOGIC_HZ*.6)^1.5)
             GC.mStr(num,0,-70)
         gc_pop()
 
         gc_setColor(r,g,b)
-        gc_scale(min(d/20,1)^.4)
+        gc_scale(min(d/(TIMING.LOGIC_HZ/3),1)^.4)
         GC.mStr(num,0,-70)
     gc_pop()
 end

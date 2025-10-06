@@ -1,7 +1,7 @@
 local TIMING={}
 
 -- Logical tick rate (Hz). Fixed at 60 for game stability and compatibility.
-TIMING.LOGIC_HZ = 60
+TIMING.LOGIC_HZ = 120
 
 function TIMING.framesToSeconds(frames)
     return frames / TIMING.LOGIC_HZ

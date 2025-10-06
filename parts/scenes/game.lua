@@ -143,7 +143,9 @@ local fastForwardObj = GC.newText(FONT.get(40),CHAR.icon.fastForward)
 local nextFrameObj = GC.newText(FONT.get(40),CHAR.icon.nextFrame)
 local function _updateStepButton()
     local w=PLAYERS[1].waiting+PLAYERS[1].falling
-    if (autoSkip==1 and w>1) or (autoSkip>0 and PLAYERS[1].frameRun<178) then
+    -- Auto-skip threshold: ~178 frames at 60Hz (about 2.97 seconds)
+    local skipThreshold = TIMING.fromLegacyFrames(178, 60)
+    if (autoSkip==1 and w>1) or (autoSkip>0 and PLAYERS[1].frameRun<skipThreshold) then
         widgetWithName('step').obj=fastForwardObj
     else
         widgetWithName('step').obj=nextFrameObj
@@ -174,7 +176,9 @@ local function _autoSkipDisp()
 end
 
 local function _restart()
-    resetGameData(PLAYERS[1].frameRun<240 and 'q')
+    -- Quick restart threshold: ~240 frames at 60Hz (about 4 seconds)
+    local quickRestartThreshold = TIMING.fromLegacyFrames(240, 60)
+    resetGameData(PLAYERS[1].frameRun<quickRestartThreshold and 'q')
     noKey=replaying
     noTouch=replaying
     trigGameRate,gameRate=0,1

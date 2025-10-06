@@ -2644,7 +2644,9 @@ local function update_alive(P,dt)
     -- Calculate drop speed
     do
         local v=0
-        for i=2,10 do v=v+i*(i-1)*72/(P.frameRun-P.dropTime[i]) end
+        -- Speed calculation coefficient: 72 at 60Hz, scaled for current logic Hz
+        local speedCoeff = TIMING.fromLegacyFrames(72, 60)
+        for i=2,10 do v=v+i*(i-1)*speedCoeff/(P.frameRun-P.dropTime[i]) end
         P.dropSpeed=approach(P.dropSpeed,v,dt)
     end
 

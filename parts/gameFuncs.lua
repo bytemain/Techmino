@@ -672,7 +672,9 @@ function gameOver()-- Save record
     end
 end
 function trySave()
-    if not GAME.statSaved and PLAYERS[1] and PLAYERS[1].type=='human' and (PLAYERS[1].frameRun>300 or GAME.result) then
+    -- Save stats threshold: ~300 frames at 60Hz (about 5 seconds)
+    local saveThreshold = TIMING.fromLegacyFrames(300, 60)
+    if not GAME.statSaved and PLAYERS[1] and PLAYERS[1].type=='human' and (PLAYERS[1].frameRun>saveThreshold or GAME.result) then
         GAME.statSaved=true
         STAT.game=STAT.game+1
         mergeStat(STAT,PLAYERS[1].stat)
@@ -1110,7 +1112,9 @@ do-- function checkWarning(P,dt)
     local max=math.max
     function checkWarning(P,dt)
         if P.alive then
-            if P.frameRun%26==0 then
+            -- Check field height every ~26 frames at 60Hz (about 0.43 seconds)
+            local heightCheckInterval = TIMING.fromLegacyFrames(26, 60)
+            if heightCheckInterval > 0 and P.frameRun % heightCheckInterval == 0 then
                 local F=P.field
                 local height=0-- Max height of row 4~7
                 for x=4,7 do
@@ -1132,7 +1136,9 @@ do-- function checkWarning(P,dt)
                 _=max(_-.026,0)
             end
             GAME.warnLVL=_
-            if GAME.warnLVL>1.126 and P.frameRun%30==0 then
+            -- Play warning beep every ~30 frames at 60Hz (about 0.5 seconds)
+            local beepInterval = TIMING.fromLegacyFrames(30, 60)
+            if GAME.warnLVL>1.126 and beepInterval > 0 and P.frameRun % beepInterval == 0 then
                 SFX.fplay('warn_beep',SETTING.sfx_warn)
             end
         elseif GAME.warnLVL>0 then

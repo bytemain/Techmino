@@ -45,9 +45,4 @@ function TIMING.getPPS(pieces, timeInSeconds)
     return timeInSeconds > 0 and (pieces / timeInSeconds) or 0
 end
 
--- Apply logic tick rate from loaded settings (deprecated - LOGIC_HZ is now fixed)
-function TIMING.applyFromSetting()
-    -- No-op: LOGIC_HZ is now fixed at 60 for stability
-end
-
 return TIMING

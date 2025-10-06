@@ -132,7 +132,7 @@ local function _rep5()
     _updateRepButtons()
 end
 local function _skip(P)
-    local startGate = TIMING.secondsToFramesInt(3)-1
+    local startGate = TIMING.THREE_SECONDS_FRAMES-1
     if P.frameRun<startGate then
         trigGameRate=trigGameRate+(startGate-P.frameRun)
     else

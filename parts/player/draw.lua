@@ -712,7 +712,7 @@ local function _drawMission(curMission,L,missionkill)
 end
 local function _drawStartCounter(time)
     -- Convert frame count to countdown seconds (3,2,1)
-    local totalFrames = TIMING.secondsToFramesInt(3)
+    local totalFrames = TIMING.THREE_SECONDS_FRAMES - 1
     time = totalFrames - time
     gc_push('transform')
         gc_translate(300,300)
@@ -1007,7 +1007,7 @@ function draw.norm(P,repMode)
             GC.mStr("(+"..STRING.time_short(diff)..")",300,451)
         end
 
-    if P.frameRun<TIMING.secondsToFramesInt(3) then
+    if P.frameRun<TIMING.THREE_SECONDS_FRAMES then
             _drawStartCounter(P.frameRun)
         end
     gc_pop()

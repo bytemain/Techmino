@@ -2436,7 +2436,7 @@ local function task_autoPause()
     while true do
         yield()
         time=time+1
-    if SCN.cur~='game' or PLAYERS[1].frameRun<TIMING.secondsToFramesInt(3) then
+    if SCN.cur~='game' or PLAYERS[1].frameRun<TIMING.THREE_SECONDS_FRAMES then
             return
         elseif time==120 then
             pauseGame()
@@ -2617,12 +2617,12 @@ local function update_alive(P,dt)
     local ENV=P.gameEnv
 
     P.frameRun=P.frameRun+1
-    if P.frameRun<=TIMING.secondsToFramesInt(3) then
+    if P.frameRun<=TIMING.THREE_SECONDS_FRAMES then
         if P.frameRun==TIMING.secondsToFramesInt(1) then
             if P.id==1 then playReadySFX(2) end
         elseif P.frameRun==TIMING.secondsToFramesInt(2) then
             if P.id==1 then playReadySFX(1) end
-        elseif P.frameRun==TIMING.secondsToFramesInt(3) then
+        elseif P.frameRun==TIMING.THREE_SECONDS_FRAMES then
             if P.id==1 then playReadySFX(0) end
             P.control=true
             P.timing=true

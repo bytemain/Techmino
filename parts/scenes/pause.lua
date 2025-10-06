@@ -250,7 +250,7 @@ function scene.draw()
     end
 
     -- Big info frame
-    if PLAYERS[1].frameRun>=TIMING.secondsToFramesInt(3) then
+    if PLAYERS[1].frameRun>=TIMING.THREE_SECONDS_FRAMES then
         GC.push('transform')
         GC.translate(560,205)
         GC.setLineWidth(2)
@@ -380,12 +380,12 @@ scene.widgetList={
     WIDGET.newKey{name='page_prev',x=500,y=390,w=70,code=pressKey'tab',
         fText=GC.DO{70,70,{'setLW',2},                                              {'dRRPol',33,35,32,3,6,3.142},{'dRRPol',45,35,32,3,6,3.142}},
         fShade=GC.DO{70,70,{'setCL',1,1,1,.4},{'draw',GC.DO{70,70,{'setCL',1,1,1,1},{'fRRPol',33,35,32,3,6,3.142},{'fRRPol',45,35,32,3,6,3.142}}}},
-        hideF=function() return PLAYERS[1].frameRun<=TIMING.secondsToFramesInt(3) end,
+        hideF=function() return PLAYERS[1].frameRun<=TIMING.THREE_SECONDS_FRAMES end,
         },
     WIDGET.newKey{name='page_next',x=1230,y=390,w=70,code=pressKey'Stab',
         fText=GC.DO{70,70,{'setLW',2},                                              {'dRRPol',37,35,32,3,6},{'dRRPol',25,35,32,3,6}},
         fShade=GC.DO{70,70,{'setCL',1,1,1,.4},{'draw',GC.DO{70,70,{'setCL',1,1,1,1},{'fRRPol',37,35,32,3,6},{'fRRPol',25,35,32,3,6}}}},
-        hideF=function() return PLAYERS[1].frameRun<=TIMING.secondsToFramesInt(3) end,
+        hideF=function() return PLAYERS[1].frameRun<=TIMING.THREE_SECONDS_FRAMES end,
         },
     WIDGET.newKey{name='replay',   x=865,y=165,w=200,h=40,font=25,code=pressKey'p',hideF=function() return not (GAME.result or GAME.replaying) or GAME.initPlayerCount>1 end},
     WIDGET.newKey{name='save',     x=1075,y=165,w=200,h=40,font=25,code=pressKey'o',hideF=function() return not (GAME.result or GAME.replaying) or GAME.initPlayerCount>1 or GAME.saved end},

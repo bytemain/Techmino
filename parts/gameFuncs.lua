@@ -672,8 +672,7 @@ function gameOver()-- Save record
     end
 end
 function trySave()
-    -- Save stats threshold: ~300 frames at 60Hz (about 5 seconds)
-    local saveThreshold = TIMING.fromLegacyFrames(300, 60)
+    local saveThreshold = TIMING.FIVE_SECONDS_FRAMES
     if not GAME.statSaved and PLAYERS[1] and PLAYERS[1].type=='human' and (PLAYERS[1].frameRun>saveThreshold or GAME.result) then
         GAME.statSaved=true
         STAT.game=STAT.game+1

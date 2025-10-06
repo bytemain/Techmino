@@ -48,7 +48,12 @@ end
 -- Pre-calculated constants for performance
 TIMING.DROP_SPEED_COEFF = TIMING.fromLegacyFrames(72, 60)
 
--- Pre-calculated constant for 3 seconds in frames
+-- Pre-calculated constant
+TIMING.ONE_SECOND_FRAMES = TIMING.secondsToFramesInt(1)
+TIMING.TWO_SECONDS_FRAMES = TIMING.secondsToFramesInt(2)
 TIMING.THREE_SECONDS_FRAMES = TIMING.secondsToFramesInt(3)
+TIMING.FOUR_SECONDS_FRAMES = TIMING.secondsToFramesInt(4)
+TIMING.FIVE_SECONDS_FRAMES = TIMING.secondsToFramesInt(5)
+
 
 return TIMING

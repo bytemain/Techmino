@@ -176,8 +176,7 @@ local function _autoSkipDisp()
 end
 
 local function _restart()
-    -- Quick restart threshold: ~240 frames at 60Hz (about 4 seconds)
-    local quickRestartThreshold = TIMING.fromLegacyFrames(240, 60)
+    local quickRestartThreshold = TIMING.FOUR_SECONDS_FRAMES
     resetGameData(PLAYERS[1].frameRun<quickRestartThreshold and 'q')
     noKey=replaying
     noTouch=replaying
@@ -375,7 +374,7 @@ local function _update_common(dt)
     for p=1,#PLAYERS do PLAYERS[p]:update(dt) end
 
     -- Fresh royale target every 2 seconds (logic time)
-    local every = TIMING.secondsToFramesInt(2)
+    local every = TIMING.TWO_SECONDS_FRAMES
     if every>0 and PLAYERS[1].frameRun%every==0 and PLAYERS[1].gameEnv.layout=='royale' then
         freshMostDangerous()
     end

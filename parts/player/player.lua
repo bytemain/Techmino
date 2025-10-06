@@ -2618,9 +2618,9 @@ local function update_alive(P,dt)
 
     P.frameRun=P.frameRun+1
     if P.frameRun<=TIMING.THREE_SECONDS_FRAMES then
-        if P.frameRun==TIMING.secondsToFramesInt(1) then
+        if P.frameRun==TIMING.ONE_SECOND_FRAMES then
             if P.id==1 then playReadySFX(2) end
-        elseif P.frameRun==TIMING.secondsToFramesInt(2) then
+        elseif P.frameRun==TIMING.TWO_SECONDS_FRAMES then
             if P.id==1 then playReadySFX(1) end
         elseif P.frameRun==TIMING.THREE_SECONDS_FRAMES then
             if P.id==1 then playReadySFX(0) end

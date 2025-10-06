@@ -2633,7 +2633,7 @@ local function update_alive(P,dt)
         end
         if P.movDir~=0 then
             if P.moving < P.gameEnv.das then
-                P.moving = P.moving + TIMING.FRAME_DELTA
+                P.moving = P.moving + 1
             end
         else
             P.moving=0
@@ -2711,12 +2711,12 @@ local function update_alive(P,dt)
                                 mov=das
                             end
                         end
-                        mov=mov+TIMING.FRAME_DELTA
+                        mov=mov+1
                     else
                         if mov==das then
                             P:act_insRight(true)
                         else
-                            mov=mov+TIMING.FRAME_DELTA
+                            mov=mov+1
                         end
                     end
                     if mov>=das and ENV.shakeFX and P.cur and P:ifoverlap(P.cur.bk,P.curX+1,P.curY) then
@@ -2736,12 +2736,12 @@ local function update_alive(P,dt)
                                 mov=das
                             end
                         end
-                        mov=mov+TIMING.FRAME_DELTA
+                        mov=mov+1
                     else
                         if mov==das then
                             P:act_insLeft(true)
                         else
-                            mov=mov+TIMING.FRAME_DELTA
+                            mov=mov+1
                         end
                     end
                     if mov>=das and ENV.shakeFX and P.cur and P:ifoverlap(P.cur.bk,P.curX-1,P.curY) then
@@ -2752,7 +2752,7 @@ local function update_alive(P,dt)
                 end
             end
         elseif mov<das then
-            mov=mov+TIMING.FRAME_DELTA
+            mov=mov+1
         end
         P.moving=mov
     elseif P.keyPressing[1] then
@@ -2766,7 +2766,7 @@ local function update_alive(P,dt)
     -- Drop pressed
     if P.keyPressing[7] then
         -- Soft drop counting
-        P.downing=P.downing+TIMING.FRAME_DELTA
+        P.downing=P.downing+1
         if P.downing>=ENV.sddas then
             if ENV.sdarr==0 then
                 P:act_insDown()
@@ -2776,7 +2776,7 @@ local function update_alive(P,dt)
             end
         end
     else
-        P.downing = -TIMING.FRAME_DELTA
+        P.downing = -1
     end
 
     local stopAtFalling
@@ -2785,7 +2785,7 @@ local function update_alive(P,dt)
     repeat
         if P.falling>0 then
             stopAtFalling=true
-            P:_updateFalling(P.falling-TIMING.FRAME_DELTA)
+            P:_updateFalling(P.falling-1)
             if P.falling>0 then
                 break-- goto THROW_stop
             end
@@ -2796,7 +2796,7 @@ local function update_alive(P,dt)
             -- Try spawn new block
             if not P.cur then
                 if not stopAtFalling and P.waiting>0 then
-                    P.waiting=P.waiting-TIMING.FRAME_DELTA
+                    P.waiting=P.waiting-1
                 end
                 if P.waiting<=0 then
                     P:spawn()
@@ -2810,13 +2810,13 @@ local function update_alive(P,dt)
                     local D=P.dropDelay
                     local dist-- Drop distance
                     if D>1 then
-                        D=D-TIMING.FRAME_DELTA
+                        D=D-1
                         if P.keyPressing[7] and P.downing>=ENV.sddas then
                             D=D-ceil(ENV.drop/ENV.sdarr)
                         end
                         if D<=0 then
                             dist=1
-                            P.dropDelay=(D-TIMING.FRAME_DELTA)%ENV.drop+TIMING.FRAME_DELTA
+                            P.dropDelay=(D-1)%ENV.drop+1
                         else
                             P.dropDelay=D
                             break-- goto THROW_stop
@@ -2855,7 +2855,7 @@ local function update_alive(P,dt)
                     P:freshBlockDelay()
                     P:checkTouchSound()
                 else
-                    P.lockDelay=P.lockDelay-TIMING.FRAME_DELTA
+                    P.lockDelay=P.lockDelay-1
                     if P.lockDelay>=0 then
                         break-- goto THROW_stop
                     end
@@ -2935,7 +2935,7 @@ local function update_dead(P,dt)
     end
 
     if P.falling>0 then
-        P:_updateFalling(P.falling-TIMING.FRAME_DELTA)
+        P:_updateFalling(P.falling-1)
     end
     if P.b2b1>0 then
         P.b2b1=max(0,P.b2b1*.92-1)

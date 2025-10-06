@@ -27,24 +27,6 @@ function TIMING.framesAt(frames, fromHz, toHz)
     return math.floor(frames * toHz / fromHz + 0.5)
 end
 
--- Speed calculation helpers (per-minute metrics)
-function TIMING.perMinute(count, timeInSeconds)
-    return timeInSeconds > 0 and (count / timeInSeconds * 60) or 0
-end
-
--- Common speed metrics
-function TIMING.getLPM(lines, timeInSeconds)
-    return TIMING.perMinute(lines, timeInSeconds)
-end
-
-function TIMING.getAPM(attacks, timeInSeconds)
-    return TIMING.perMinute(attacks, timeInSeconds)
-end
-
-function TIMING.getPPS(pieces, timeInSeconds)
-    return timeInSeconds > 0 and (pieces / timeInSeconds) or 0
-end
-
 -- Pre-calculated constants for performance
 TIMING.DROP_SPEED_COEFF = TIMING.fromLegacyFrames(72, 60)
 

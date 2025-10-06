@@ -175,6 +175,16 @@ local function _newEmptyPlayer(id,mini)
     }
     return P
 end
+local function _scaleFrameBasedSettings(ENV)
+    -- Scale frame-based timing settings to current LOGIC_HZ
+    local frameBasedSettings = {'das', 'arr', 'dascut', 'irscut', 'dropcut', 'sddas', 'sdarr', 'hang'}
+    for _, setting in ipairs(frameBasedSettings) do
+        if ENV[setting] and type(ENV[setting]) == 'number' then
+            ENV[setting] = TIMING.fromLegacyFrames(ENV[setting], 60)
+        end
+    end
+end
+
 local function _loadGameEnv(P)-- Load gameEnv
     P.gameEnv={}-- Current game setting environment
     local ENV=P.gameEnv
@@ -199,6 +209,8 @@ local function _loadGameEnv(P)-- Load gameEnv
             ENV[k]=TABLE.copy(v)
         end
     end
+    
+    _scaleFrameBasedSettings(ENV)
     
     if ENV.allowMod then
         for i=1,#GAME.mod do
@@ -236,6 +248,8 @@ local function _loadRemoteEnv(P,confStr)-- Load gameEnv
             ENV[k]=TABLE.copy(v)
         end
     end
+    
+    _scaleFrameBasedSettings(ENV)
 end
 local tableNeedMerge={
     'task',

@@ -561,7 +561,9 @@ local playerActions={
     Player.act_dropRight, -- 18
     Player.act_zangiLeft, -- 19
     Player.act_zangiRight,-- 20
-}function Player:pressKey(keyID)
+}
+
+function Player:pressKey(keyID)
     if self.id==1 then
         if GAME.recording then
             local L=GAME.rep
@@ -2630,7 +2632,6 @@ local function update_alive(P,dt)
             end
         end
         if P.movDir~=0 then
-            -- Normalize DAS counting to 60Hz equivalent
             if P.moving < P.gameEnv.das then
                 P.moving = P.moving + TIMING.FRAME_DELTA
             end
@@ -2645,9 +2646,7 @@ local function update_alive(P,dt)
     -- Calculate drop speed
     do
         local v=0
-        -- Speed calculation coefficient: 72 at 60Hz, scaled for current logic Hz
-        local speedCoeff = TIMING.fromLegacyFrames(72, 60)
-        for i=2,10 do v=v+i*(i-1)*speedCoeff/(P.frameRun-P.dropTime[i]) end
+        for i=2,10 do v=v+i*(i-1)*TIMING.DROP_SPEED_COEFF/(P.frameRun-P.dropTime[i]) end
         P.dropSpeed=approach(P.dropSpeed,v,dt)
     end
 
@@ -2766,7 +2765,7 @@ local function update_alive(P,dt)
 
     -- Drop pressed
     if P.keyPressing[7] then
-        -- Normalize soft drop counting to 60Hz equivalent
+        -- Soft drop counting
         P.downing=P.downing+TIMING.FRAME_DELTA
         if P.downing>=ENV.sddas then
             if ENV.sdarr==0 then
@@ -2976,7 +2975,7 @@ function Player:update(dt)
         -- avoiding FPS-dependent drift when maxFPS changes.
         if self.trigFrame>=1 and self.alive then
             if self.streamProgress or self.timing then
-                S.time=(TIMING and TIMING.framesToSeconds(self.stat.frame)) or (self.stat.frame/60)
+                S.time=TIMING.framesToSeconds(self.stat.frame)
             end
         end
         while self.trigFrame>=1 do
@@ -3024,7 +3023,7 @@ function Player:update(dt)
         -- After processing ticks, ensure time reflects latest frame count
         if self.alive then
             if self.streamProgress or self.timing then
-                S.time=(TIMING and TIMING.framesToSeconds(self.stat.frame)) or (self.stat.frame/60)
+                S.time=TIMING.framesToSeconds(self.stat.frame)
             end
         end
     else

@@ -263,7 +263,7 @@ function scene.update(dt)
 
                 -- Upload stream
                 -- Send upstream roughly every 8 frames (~0.133s at 60Hz)
-                local sendInterval = TIMING.secondsToFramesInt(8 / ((TIMING and TIMING.LOGIC_HZ) or 60))
+                local sendInterval = TIMING.secondsToFramesInt(8 / TIMING.LOGIC_HZ)
                 if not NET.spectate and P1.frameRun-lastUpstreamTime>sendInterval then
                     local stream
                     if not GAME.rep[upstreamProgress] then

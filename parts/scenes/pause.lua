@@ -29,14 +29,13 @@ function scene.enter()
     timer1=(SCN.prev=='game' or SCN.prev=='depause') and 0 or 1
     timer2=timer1
 
-    local hz=(TIMING and TIMING.LOGIC_HZ) or 60
-    local frameLostRate=(S.frame/S.time/hz-1)*100
+    local frameLostRate=(S.frame/S.time/TIMING.LOGIC_HZ-1)*100
     form={
         {COLOR.Z,STRING.time(S.time),frameLostRate>10 and COLOR.R or frameLostRate>3 and COLOR.Y or COLOR.H,(" (%.2f%%)"):format(frameLostRate)},
         ("%d/%d/%d"):format(S.key,S.rotate,S.hold),
-        ("%d  %.2fPPS"):format(S.piece,S.piece/S.time),
-        ("%d(%d)  %.2fLPM"):format(S.row,S.dig,S.row/S.time*60),
-        ("%d(%d)  %.2fAPM"):format(S.atk,S.digatk,S.atk/S.time*60),
+        ("%d  %.2fPPS"):format(S.piece,TIMING.getPPS(S.piece,S.time)),
+        ("%d(%d)  %.2fLPM"):format(S.row,S.dig,TIMING.getLPM(S.row,S.time)),
+        ("%d(%d)  %.2fAPM"):format(S.atk,S.digatk,TIMING.getAPM(S.atk,S.time)),
         ("%d(%d-%d)"):format(S.pend,S.recv,S.recv-S.pend),
         ("[1] %-7d[2] %-7d[3] %-7d[4] %-7d"):format(S.clears[1],S.clears[2],S.clears[3],S.clears[4]),
         (CHAR.icon.num0InSpin.." %-8d"..CHAR.icon.num1InSpin.." %-8d"..CHAR.icon.num2InSpin.." %-8d"..CHAR.icon.num3InSpin.." %-8d"):format(S.spins[1],S.spins[2],S.spins[3],S.spins[4]),
@@ -45,12 +44,12 @@ function scene.enter()
     }
     -- From right-down, 60 degree each
     radar={
-        (S.off+S.dig)/S.time*60,-- DefPM
-        (S.atk+S.dig)/S.time*60,-- ADPM
-        S.atk/S.time*60,        -- AtkPM
-        S.send/S.time*60,       -- SendPM
-        S.piece/S.time*24,      -- Line'PM
-        S.dig/S.time*60,        -- DigPM
+        TIMING.perMinute(S.off+S.dig,S.time),-- DefPM
+        TIMING.perMinute(S.atk+S.dig,S.time),-- ADPM
+        TIMING.getAPM(S.atk,S.time),        -- AtkPM
+        TIMING.perMinute(S.send,S.time),       -- SendPM
+        S.piece/S.time*24,      -- Line'PM (keep original calculation)
+        TIMING.perMinute(S.dig,S.time),        -- DigPM
     }
     val={1/80,1/160,1/120,1/80,1/100,1/40}
 

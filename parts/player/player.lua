@@ -2966,8 +2966,7 @@ function Player:_die()
     end
 end
 function Player:update(dt)
-    local hz=(TIMING and TIMING.LOGIC_HZ) or 60
-    self.trigFrame=self.trigFrame+dt*hz
+    self.trigFrame=self.trigFrame+dt*TIMING.LOGIC_HZ
     if self.alive then
         local S=self.stat
         if self.type=='bot' then self.bot:update(dt) end

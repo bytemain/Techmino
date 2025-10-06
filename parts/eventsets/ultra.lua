@@ -1,5 +1,5 @@
 local warnTime={60,90,105,115,116,117,118,119,120}
-for i=1,#warnTime do warnTime[i]=warnTime[i]*60 end
+for i=1,#warnTime do warnTime[i]=warnTime[i]*TIMING.LOGIC_HZ end
 
 return {
     mesDisp=function(P)
@@ -9,7 +9,7 @@ return {
         GC.setColor(.98,.98,.98,.4)
         GC.rectangle('fill',0+2,260+2,126-4,80-4,2)
         setFont(45)
-        local t=P.stat.frame/60
+        local t=TIMING.framesToSeconds(P.stat.frame)
         local T=("%.1f"):format(120-t)
         GC.setColor(COLOR.dH)
         GC.mStr(T,65,270)

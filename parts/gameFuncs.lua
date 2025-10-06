@@ -1061,7 +1061,7 @@ do-- function resetGameData(args)
             GAME.recording=false
             GAME.replaying=true
         else
-            GAME.frameStart=args:find'n' and 0 or 180-SETTING.reTime*60
+            GAME.frameStart=args:find'n' and 0 or TIMING.secondsToFramesInt(3)-TIMING.secondsToFramesInt(SETTING.reTime)
             GAME.seed=seed or math.random(1046101471)
             GAME.saved=false
             GAME.setting=_copyGameSetting()

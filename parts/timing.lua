@@ -1,7 +1,7 @@
 local TIMING={}
 
--- Logical tick rate (Hz). Defaults to 60; can be overridden by settings.
-TIMING.LOGIC_HZ = (SETTING and SETTING.logicHZ) or 60
+-- Logical tick rate (Hz). Fixed at 60 for game stability and compatibility.
+TIMING.LOGIC_HZ = 60
 
 function TIMING.framesToSeconds(frames)
     return frames / TIMING.LOGIC_HZ
@@ -27,11 +27,27 @@ function TIMING.framesAt(frames, fromHz, toHz)
     return math.floor(frames * toHz / fromHz + 0.5)
 end
 
--- Apply logic tick rate from loaded settings
+-- Speed calculation helpers (per-minute metrics)
+function TIMING.perMinute(count, timeInSeconds)
+    return timeInSeconds > 0 and (count / timeInSeconds * 60) or 0
+end
+
+-- Common speed metrics
+function TIMING.getLPM(lines, timeInSeconds)
+    return TIMING.perMinute(lines, timeInSeconds)
+end
+
+function TIMING.getAPM(attacks, timeInSeconds)
+    return TIMING.perMinute(attacks, timeInSeconds)
+end
+
+function TIMING.getPPS(pieces, timeInSeconds)
+    return timeInSeconds > 0 and (pieces / timeInSeconds) or 0
+end
+
+-- Apply logic tick rate from loaded settings (deprecated - LOGIC_HZ is now fixed)
 function TIMING.applyFromSetting()
-    if SETTING and type(SETTING.logicHZ)=='number' then
-        TIMING.LOGIC_HZ = SETTING.logicHZ
-    end
+    -- No-op: LOGIC_HZ is now fixed at 60 for stability
 end
 
 return TIMING

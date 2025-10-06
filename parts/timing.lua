@@ -45,4 +45,7 @@ function TIMING.getPPS(pieces, timeInSeconds)
     return timeInSeconds > 0 and (pieces / timeInSeconds) or 0
 end
 
+-- Frame delta for DAS/ARR counting to maintain 60Hz timing at any LOGIC_HZ
+TIMING.FRAME_DELTA = 60 / TIMING.LOGIC_HZ
+
 return TIMING

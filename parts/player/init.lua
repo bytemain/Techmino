@@ -199,6 +199,7 @@ local function _loadGameEnv(P)-- Load gameEnv
             ENV[k]=TABLE.copy(v)
         end
     end
+    
     if ENV.allowMod then
         for i=1,#GAME.mod do
             if GAME.mod[i]>0 then

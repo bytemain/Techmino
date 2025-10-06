@@ -710,15 +710,15 @@ local function _drawMission(curMission,L,missionkill)
         end
     gc_pop()
 end
-local function _drawStartCounter(time)
+local function _drawStartCounter(frameRun)
     -- Convert frame count to countdown seconds (3,2,1)
     local totalFrames = TIMING.THREE_SECONDS_FRAMES - 1
-    time = totalFrames - time
+    frameRun = totalFrames - frameRun
     gc_push('transform')
         gc_translate(300,300)
         local r,g,b
-        local num = floor(time / TIMING.LOGIC_HZ) + 1
-        local d = time % TIMING.LOGIC_HZ
+        local num = floor(frameRun / TIMING.LOGIC_HZ) + 1
+        local d = frameRun % TIMING.LOGIC_HZ
         if num==3 then
             r,g,b=.7,.8,.98
             if d > TIMING.LOGIC_HZ * 0.75 then gc_rotate((d - TIMING.LOGIC_HZ * 0.75)^2 * 0.00355) end

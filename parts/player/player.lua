@@ -561,7 +561,9 @@ local playerActions={
     Player.act_dropRight, -- 18
     Player.act_zangiLeft, -- 19
     Player.act_zangiRight,-- 20
-}function Player:pressKey(keyID)
+}
+
+function Player:pressKey(keyID)
     if self.id==1 then
         if GAME.recording then
             local L=GAME.rep
@@ -2434,7 +2436,7 @@ local function task_autoPause()
     while true do
         yield()
         time=time+1
-        if SCN.cur~='game' or PLAYERS[1].frameRun<180 then
+    if SCN.cur~='game' or PLAYERS[1].frameRun<TIMING.THREE_SECONDS_FRAMES then
             return
         elseif time==120 then
             pauseGame()
@@ -2615,12 +2617,12 @@ local function update_alive(P,dt)
     local ENV=P.gameEnv
 
     P.frameRun=P.frameRun+1
-    if P.frameRun<=180 then
-        if P.frameRun==60 then
+    if P.frameRun<=TIMING.THREE_SECONDS_FRAMES then
+        if P.frameRun==TIMING.ONE_SECOND_FRAMES then
             if P.id==1 then playReadySFX(2) end
-        elseif P.frameRun==120 then
+        elseif P.frameRun==TIMING.TWO_SECONDS_FRAMES then
             if P.id==1 then playReadySFX(1) end
-        elseif P.frameRun==180 then
+        elseif P.frameRun==TIMING.THREE_SECONDS_FRAMES then
             if P.id==1 then playReadySFX(0) end
             P.control=true
             P.timing=true
@@ -2630,8 +2632,8 @@ local function update_alive(P,dt)
             end
         end
         if P.movDir~=0 then
-            if P.moving<P.gameEnv.das then
-                P.moving=P.moving+1
+            if P.moving < P.gameEnv.das then
+                P.moving = P.moving + 1
             end
         else
             P.moving=0
@@ -2644,7 +2646,7 @@ local function update_alive(P,dt)
     -- Calculate drop speed
     do
         local v=0
-        for i=2,10 do v=v+i*(i-1)*72/(P.frameRun-P.dropTime[i]) end
+        for i=2,10 do v=v+i*(i-1)*TIMING.DROP_SPEED_COEFF/(P.frameRun-P.dropTime[i]) end
         P.dropSpeed=approach(P.dropSpeed,v,dt)
     end
 
@@ -2763,6 +2765,7 @@ local function update_alive(P,dt)
 
     -- Drop pressed
     if P.keyPressing[7] then
+        -- Soft drop counting
         P.downing=P.downing+1
         if P.downing>=ENV.sddas then
             if ENV.sdarr==0 then
@@ -2773,7 +2776,7 @@ local function update_alive(P,dt)
             end
         end
     else
-        P.downing=-1
+        P.downing = -1
     end
 
     local stopAtFalling
@@ -2964,15 +2967,15 @@ function Player:_die()
     end
 end
 function Player:update(dt)
-    self.trigFrame=self.trigFrame+dt*60
+    self.trigFrame=self.trigFrame+dt*TIMING.LOGIC_HZ
     if self.alive then
         local S=self.stat
         if self.type=='bot' then self.bot:update(dt) end
+        -- Normalize time progression to be based on frame counter,
+        -- avoiding FPS-dependent drift when maxFPS changes.
         if self.trigFrame>=1 and self.alive then
-            if self.streamProgress then
-                S.time=self.stat.frame/60
-            elseif self.timing then
-                S.time=S.time+dt
+            if self.streamProgress or self.timing then
+                S.time=TIMING.framesToSeconds(self.stat.frame)
             end
         end
         while self.trigFrame>=1 do
@@ -3016,6 +3019,12 @@ function Player:update(dt)
                 update_alive(self,dt)
             end
             self.trigFrame=self.trigFrame-1
+        end
+        -- After processing ticks, ensure time reflects latest frame count
+        if self.alive then
+            if self.streamProgress or self.timing then
+                S.time=TIMING.framesToSeconds(self.stat.frame)
+            end
         end
     else
         while self.trigFrame>=1 do

@@ -572,6 +572,7 @@ C. Gamepad
             atkFX="Atk FX",
 
             frame="Render Frame Rate (%)",
+            maxFPS="Max FPS",
 
             text="Line Clear Pop-Ups",
             score="Score Pop-Ups",

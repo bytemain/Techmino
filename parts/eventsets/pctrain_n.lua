@@ -14,7 +14,7 @@ local function task_PC(P)
     P:pushNextList(L,symmetry)
 
     P.control=false
-    if P.frameRun>180 then for _=1,26 do coroutine.yield() end end
+    if P.frameRun>TIMING.THREE_SECONDS_FRAMES then for _=1,26 do coroutine.yield() end end
     P.control=true
 
     local base=PCbase[difficulty]
@@ -30,7 +30,7 @@ local function _check(P)
             P:win('finish')
         else
             P:newTask(task_PC)
-            if P.frameRun<180 then P.fieldBeneath=0 end
+    if P.frameRun<TIMING.THREE_SECONDS_FRAMES then P.fieldBeneath=0 end
         end
     end
 end

@@ -1,0 +1,41 @@
+local TIMING={}
+
+-- Logical tick rate (Hz). Fixed at 60 for game stability and compatibility.
+TIMING.LOGIC_HZ = 120
+
+function TIMING.framesToSeconds(frames)
+    return frames / TIMING.LOGIC_HZ
+end
+
+function TIMING.secondsToFrames(seconds)
+    return seconds * TIMING.LOGIC_HZ
+end
+
+function TIMING.secondsToFramesInt(seconds)
+    return math.floor(seconds * TIMING.LOGIC_HZ + 0.5)
+end
+
+-- Convert a legacy frame count at a given base Hz to current logic frames
+-- Example: 26 frames at 60Hz -> equivalent frames at current LOGIC_HZ
+function TIMING.fromLegacyFrames(frames, legacyHz)
+    legacyHz = legacyHz or 60  -- Default to 60Hz if not specified
+    return math.floor(frames * TIMING.LOGIC_HZ / legacyHz + 0.5)
+end
+
+-- General frame conversion between two Hz values
+function TIMING.framesAt(frames, fromHz, toHz)
+    return math.floor(frames * toHz / fromHz + 0.5)
+end
+
+-- Pre-calculated constants for performance
+TIMING.DROP_SPEED_COEFF = TIMING.fromLegacyFrames(72, 60)
+
+-- Pre-calculated constant
+TIMING.ONE_SECOND_FRAMES = TIMING.secondsToFramesInt(1)
+TIMING.TWO_SECONDS_FRAMES = TIMING.secondsToFramesInt(2)
+TIMING.THREE_SECONDS_FRAMES = TIMING.secondsToFramesInt(3)
+TIMING.FOUR_SECONDS_FRAMES = TIMING.secondsToFramesInt(4)
+TIMING.FIVE_SECONDS_FRAMES = TIMING.secondsToFramesInt(5)
+
+
+return TIMING

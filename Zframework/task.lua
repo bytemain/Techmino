@@ -38,7 +38,7 @@ function TASK.getCount()
 end
 local trigFrame=0
 function TASK.update(dt)
-    trigFrame=trigFrame+dt*60
+    trigFrame=trigFrame+dt*TIMING.LOGIC_HZ
     for _=1,trigFrame do
         for i=#tasks,1,-1 do
             local T=tasks[i]

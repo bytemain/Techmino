@@ -262,7 +262,9 @@ function scene.update(dt)
                 checkWarning(P1,dt)
 
                 -- Upload stream
-                if not NET.spectate and P1.frameRun-lastUpstreamTime>8 then
+                -- Send upstream roughly every 8 frames (~0.133s at 60Hz)
+                local sendInterval = TIMING.secondsToFramesInt(8 / TIMING.LOGIC_HZ)
+                if not NET.spectate and P1.frameRun-lastUpstreamTime>sendInterval then
                     local stream
                     if not GAME.rep[upstreamProgress] then
                         ins(GAME.rep,P1.frameRun)

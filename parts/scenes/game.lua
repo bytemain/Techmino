@@ -132,8 +132,9 @@ local function _rep5()
     _updateRepButtons()
 end
 local function _skip(P)
-    if P.frameRun<179 then
-        trigGameRate=trigGameRate+(179-P.frameRun)
+    local startGate = TIMING.THREE_SECONDS_FRAMES-1
+    if P.frameRun<startGate then
+        trigGameRate=trigGameRate+(startGate-P.frameRun)
     else
         trigGameRate=trigGameRate+MATH.clamp(P.waiting+P.falling,1,300)
     end
@@ -142,7 +143,9 @@ local fastForwardObj = GC.newText(FONT.get(40),CHAR.icon.fastForward)
 local nextFrameObj = GC.newText(FONT.get(40),CHAR.icon.nextFrame)
 local function _updateStepButton()
     local w=PLAYERS[1].waiting+PLAYERS[1].falling
-    if (autoSkip==1 and w>1) or (autoSkip>0 and PLAYERS[1].frameRun<178) then
+    -- Auto-skip threshold: ~178 frames at 60Hz (about 2.97 seconds)
+    local skipThreshold = TIMING.fromLegacyFrames(178, 60)
+    if (autoSkip==1 and w>1) or (autoSkip>0 and PLAYERS[1].frameRun<skipThreshold) then
         widgetWithName('step').obj=fastForwardObj
     else
         widgetWithName('step').obj=nextFrameObj
@@ -173,7 +176,8 @@ local function _autoSkipDisp()
 end
 
 local function _restart()
-    resetGameData(PLAYERS[1].frameRun<240 and 'q')
+    local quickRestartThreshold = TIMING.FOUR_SECONDS_FRAMES
+    resetGameData(PLAYERS[1].frameRun<quickRestartThreshold and 'q')
     noKey=replaying
     noTouch=replaying
     trigGameRate,gameRate=0,1
@@ -369,8 +373,9 @@ local function _update_common(dt)
     -- Update players
     for p=1,#PLAYERS do PLAYERS[p]:update(dt) end
 
-    -- Fresh royale target
-    if PLAYERS[1].frameRun%120==0 and PLAYERS[1].gameEnv.layout=='royale' then
+    -- Fresh royale target every 2 seconds (logic time)
+    local every = TIMING.TWO_SECONDS_FRAMES
+    if every>0 and PLAYERS[1].frameRun%every==0 and PLAYERS[1].gameEnv.layout=='royale' then
         freshMostDangerous()
     end
 

@@ -74,8 +74,8 @@ local function _newEmptyPlayer(id,mini)
     P.sound=false
     P.alive=true
     P.control=false
-    P.timing=false
-    P.trigFrame=0
+    P.timing=false-- Whether player is in active timing state (game started)
+    P.trigFrame=0-- Accumulated logical frame counter for triggering game updates
     P.result=false-- String: 'finish'|'win'|'lose'
     P.stat=_getNewStatTable()
     P.modeData=setmetatable({},modeDataMeta)-- Data use by mode
@@ -175,6 +175,16 @@ local function _newEmptyPlayer(id,mini)
     }
     return P
 end
+local function _scaleFrameBasedSettings(ENV)
+    -- Scale frame-based timing settings to current LOGIC_HZ
+    local frameBasedSettings = {'das', 'arr', 'dascut', 'irscut', 'dropcut', 'sddas', 'sdarr', 'hang'}
+    for _, setting in ipairs(frameBasedSettings) do
+        if ENV[setting] and type(ENV[setting]) == 'number' then
+            ENV[setting] = TIMING.fromLegacyFrames(ENV[setting], 60)
+        end
+    end
+end
+
 local function _loadGameEnv(P)-- Load gameEnv
     P.gameEnv={}-- Current game setting environment
     local ENV=P.gameEnv
@@ -199,6 +209,9 @@ local function _loadGameEnv(P)-- Load gameEnv
             ENV[k]=TABLE.copy(v)
         end
     end
+    
+    _scaleFrameBasedSettings(ENV)
+    
     if ENV.allowMod then
         for i=1,#GAME.mod do
             if GAME.mod[i]>0 then
@@ -235,6 +248,8 @@ local function _loadRemoteEnv(P,confStr)-- Load gameEnv
             ENV[k]=TABLE.copy(v)
         end
     end
+    
+    _scaleFrameBasedSettings(ENV)
 end
 local tableNeedMerge={
     'task',
@@ -437,7 +452,7 @@ function PLY.newDemoPlayer(id)
     P.sound=false
     P.demo=true
 
-    P.frameRun=180
+    P.frameRun=TIMING.THREE_SECONDS_FRAMES
     P.draw=ply_draw.demo
     P.control=true
     GAME.modeEnv=DemoEnv

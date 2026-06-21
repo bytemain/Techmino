@@ -135,6 +135,7 @@ do-- function applySettings()
         -- Apply Zframework setting
         Z.setClickFX(SETTING.clickFX)
         Z.setFrameMul(SETTING.frameMul)
+        Z.setMaxFPS(SETTING.maxFPS)
         Z.setPowerInfo(SETTING.powerInfo)
         Z.setCleanCanvas(SETTING.cleanCanvas)
 
@@ -671,7 +672,8 @@ function gameOver()-- Save record
     end
 end
 function trySave()
-    if not GAME.statSaved and PLAYERS[1] and PLAYERS[1].type=='human' and (PLAYERS[1].frameRun>300 or GAME.result) then
+    local saveThreshold = TIMING.FIVE_SECONDS_FRAMES
+    if not GAME.statSaved and PLAYERS[1] and PLAYERS[1].type=='human' and (PLAYERS[1].frameRun>saveThreshold or GAME.result) then
         GAME.statSaved=true
         STAT.game=STAT.game+1
         mergeStat(STAT,PLAYERS[1].stat)
@@ -1058,7 +1060,7 @@ do-- function resetGameData(args)
             GAME.recording=false
             GAME.replaying=true
         else
-            GAME.frameStart=args:find'n' and 0 or 180-SETTING.reTime*60
+            GAME.frameStart=args:find'n' and 0 or TIMING.THREE_SECONDS_FRAMES-TIMING.secondsToFramesInt(SETTING.reTime)
             GAME.seed=seed or math.random(1046101471)
             GAME.saved=false
             GAME.setting=_copyGameSetting()
@@ -1109,7 +1111,9 @@ do-- function checkWarning(P,dt)
     local max=math.max
     function checkWarning(P,dt)
         if P.alive then
-            if P.frameRun%26==0 then
+            -- Check field height every ~26 frames at 60Hz (about 0.43 seconds)
+            local heightCheckInterval = TIMING.fromLegacyFrames(26, 60)
+            if heightCheckInterval > 0 and P.frameRun % heightCheckInterval == 0 then
                 local F=P.field
                 local height=0-- Max height of row 4~7
                 for x=4,7 do
@@ -1131,7 +1135,9 @@ do-- function checkWarning(P,dt)
                 _=max(_-.026,0)
             end
             GAME.warnLVL=_
-            if GAME.warnLVL>1.126 and P.frameRun%30==0 then
+            -- Play warning beep every ~30 frames at 60Hz (about 0.5 seconds)
+            local beepInterval = TIMING.fromLegacyFrames(30, 60)
+            if GAME.warnLVL>1.126 and beepInterval > 0 and P.frameRun % beepInterval == 0 then
                 SFX.fplay('warn_beep',SETTING.sfx_warn)
             end
         elseif GAME.warnLVL>0 then
